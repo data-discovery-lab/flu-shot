@@ -40,8 +40,22 @@ public class Main {
 
         String text = obj.getString("text");
 
+        String lang = obj.getString("lang");
+        if (lang == null || !lang.toLowerCase().equals("en")) {
+            return;
+        }
+
+        int favorourites_count = obj.getInt("favorite_count");
+
         try {
+
+            JSONObject user = obj.getJSONObject("user");
+            String userLocation = user.getString("location");
+
             writer.write(text);
+            writer.write(",");
+            writer.write(String.valueOf(favorourites_count));
+
             writer.newLine();
 
         } catch (IOException e) {
