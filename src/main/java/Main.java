@@ -1,5 +1,6 @@
 import de.siegmar.fastcsv.writer.CsvAppender;
 import de.siegmar.fastcsv.writer.CsvWriter;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.json.JSONObject;
 
 import java.io.*;
@@ -16,7 +17,7 @@ public class Main {
 
     public static void main(String[] args) {
 
-        String fileName = "flu-shot1.json";
+        String fileName = "flu-shot.json";
         String outputFile = "flu-shot.converted.csv";
 
 
@@ -25,7 +26,7 @@ public class Main {
 //            file = new File(outputFile);
              writer = new BufferedWriter( new OutputStreamWriter(new FileOutputStream(outputFile), StandardCharsets.UTF_8));
 
-            stream.forEach(l -> processLine(l));
+            stream.forEachOrdered(l -> processLine(l));
 
             writer.close();
         }
@@ -52,7 +53,7 @@ public class Main {
             JSONObject user = obj.getJSONObject("user");
             String userLocation = user.getString("location");
 
-            writer.write(text);
+            writer.write(StringEscapeUtils.escapeCsv(text));
             writer.write(",");
             writer.write(String.valueOf(favorourites_count));
 
