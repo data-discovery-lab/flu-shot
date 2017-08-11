@@ -25,8 +25,15 @@ data("stop_words")
 
 tidyTweets = unnest_tokens(tweets, "word", "tweet")
 
-cleanTweets = anti_join(tidyTweets, stop_words)
+str(tidyTweets)
+
+cleanTweets = anti_join(tidyTweets, stop_words, by="word")
 
 str(cleanTweets)
 
 count(cleanTweets, word, sort = TRUE) 
+
+bing_sentiments = get_sentiments("bing");
+sentimentTweets = inner_join(cleanTweets, bing_sentiments, by="word")
+
+str(sentimentTweets)
