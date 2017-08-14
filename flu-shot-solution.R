@@ -6,35 +6,11 @@ tweets = read.csv("flu-shot.converted.csv", stringsAsFactors = FALSE, header = F
 # add header
 colnames(tweets) = c('tweet', 'favorite_count')
 
-str(tweets)
-
-tweets
-
 library(tm)
 library(tidytext)
 library(tidyr)
 library(dplyr)
 library(SnowballC)
-
-get_sentiments("bing")
-
-data("stop_words")
-
-tidyTweets = unnest_tokens(tweets, "word", "tweet")
-
-str(tidyTweets)
-
-cleanTweets = anti_join(tidyTweets, stop_words, by="word")
-
-str(cleanTweets)
-
-count(cleanTweets, word, sort = TRUE) 
-
-bing_sentiments = get_sentiments("afinn");
-sentimentTweets = inner_join(cleanTweets, bing_sentiments, by="word")
-
-str(sentimentTweets)
-
 
 getTweetSentimentScore = function(message) {
   text <- c(message)
@@ -62,18 +38,17 @@ getTweetSentimentScore = function(message) {
   return (sum(sentimentMessage$score))
 }
 
-tweets$tweet[1]
-             
-st = getTweetSentimentScore("i am feeling happy and lucky")
-st
+testTweets = tweets[1:10, ]
+tweetSentimentScore = lapply(testTweets$tweet, getTweetSentimentScore)
+testTweets$sentiment = tweetSentimentScore
 
+positiveTweets = testTweets[testTweets$sentiment >= 3, ]
+negativeTweets = testTweets[testTweets$sentiment <= -3, ]
+neutralTweets = testTweets[(testTweets$sentiment) > -3 & (testTweets$sentiment < 3), ]
+library(topicmodels)
+lda = LDA(positiveTweets$tweet, control = list(alpha = 0.1), k = 2)
+str(positiveTweets)
 
-?count
-count(st, word, sort = T)
-str(st);
-?mutate
-st
-
-View(st)
-
-
+# data("AssociatedPress", package="topicmodels")
+# 
+# str(AssociatedPress)
