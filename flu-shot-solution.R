@@ -87,11 +87,11 @@ positiveTopTerms = getTopicAndPopularTerms(positiveTweets, NUMBER_TOPICS_POSITIV
 plotTermsAndTopics(positiveTopTerms)
 
 #negative
-negativeTopTerms = getTopicAndPopularTerms(negativeTweets, NUMBER_TOPICS_NEGATIVE, NUMBER_TOPICS_NEGATIVE)
+negativeTopTerms = getTopicAndPopularTerms(negativeTweets, NUMBER_TOPICS_NEGATIVE, NUMBER_POPULAR_TERMS)
 plotTermsAndTopics(negativeTopTerms)
 
 #netral
-neutralTopTerms = getTopicAndPopularTerms(neutralTweets, NUMBER_TOPICS_NEUTRAL, NUMBER_TOPICS_NEUTRAL)
+neutralTopTerms = getTopicAndPopularTerms(neutralTweets, NUMBER_TOPICS_NEUTRAL, NUMBER_POPULAR_TERMS)
 plotTermsAndTopics(neutralTopTerms)
 
 
