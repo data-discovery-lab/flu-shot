@@ -76,22 +76,24 @@ plotTermsAndTopics = function(top_terms) {
     coord_flip()
 }
 
-NUMBER_POPULAR_TERMS = 10
-NUMBER_TOPICS_POSITIVE = 4
-NUMBER_TOPICS_NEGATIVE = 4
-NUMBER_TOPICS_NEUTRAL = 4
+NUMBER_POPULAR_TERMS = 6
+NUMBER_TOPICS_POSITIVE = 3
+NUMBER_TOPICS_NEGATIVE = 3
+NUMBER_TOPICS_NEUTRAL = 3
 
 
 # positive topics
 positiveTopTerms = getTopicAndPopularTerms(positiveTweets, NUMBER_TOPICS_POSITIVE, NUMBER_POPULAR_TERMS)
+View(positiveTopTerms)
 plotTermsAndTopics(positiveTopTerms)
 
 #negative
 negativeTopTerms = getTopicAndPopularTerms(negativeTweets, NUMBER_TOPICS_NEGATIVE, NUMBER_POPULAR_TERMS)
+View(negativeTopTerms)
 plotTermsAndTopics(negativeTopTerms)
 
 #netral
 neutralTopTerms = getTopicAndPopularTerms(neutralTweets, NUMBER_TOPICS_NEUTRAL, NUMBER_POPULAR_TERMS)
+View(neutralTopTerms)
 plotTermsAndTopics(neutralTopTerms)
-
 
