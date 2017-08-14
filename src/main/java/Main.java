@@ -15,7 +15,7 @@ public class Main {
     private static CsvWriter csvWriter = new CsvWriter();
     private static BufferedWriter writer;
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception{
 
         String fileName = "flu-shot.json";
         String outputFile = "flu-shot.converted.csv";
@@ -26,8 +26,32 @@ public class Main {
 //            file = new File(outputFile);
              writer = new BufferedWriter( new OutputStreamWriter(new FileOutputStream(outputFile), StandardCharsets.UTF_8));
 
+            // write header
+            writer.write("User Id"); // user id
+            writer.write(",");
+            writer.write("Followers_count"); // followers
+            writer.write(",");
+            writer.write("Friends_count"); // friends
+            writer.write(",");
+
+            writer.write("Tweet"); // tweet
+            writer.write(",");
+            writer.write("Favorite_count"); // favorite_count
+            writer.write(",");
+
+            writer.write("Created_at"); // created at
+            writer.write(",");
+            writer.write("State"); // state
+            writer.write(",");
+            writer.write("Country"); // state
+
+
+
+            writer.newLine();
+
             stream.forEachOrdered(l -> processLine(l));
 
+            writer.flush();
             writer.close();
         }
         catch (Exception e) {
@@ -53,14 +77,36 @@ public class Main {
             JSONObject user = obj.getJSONObject("user");
             String userLocation = user.getString("location");
 
-            writer.write(StringEscapeUtils.escapeCsv(text));
+            writer.write(user.getString("id_str")); // user id
             writer.write(",");
-            writer.write(String.valueOf(favorourites_count));
+            writer.write(String.valueOf(user.getInt("followers_count"))); // followers
+            writer.write(",");
+            writer.write(String.valueOf(user.getInt("friends_count"))); // friends
+            writer.write(",");
+
+            writer.write(StringEscapeUtils.escapeCsv(text)); // tweet
+            writer.write(",");
+            writer.write(String.valueOf(favorourites_count)); // favorite_count
+            writer.write(",");
+            writer.write(obj.getString("created_at")); // created at
+
+            JSONObject tweetLoc = obj.getJSONObject("geocoded");
+
+            if (tweetLoc != null) {
+                writer.write(",");
+                writer.write(tweetLoc.optString("state")); // state
+                writer.write(",");
+                writer.write(tweetLoc.optString("country")); // state
+            }
+
 
             writer.newLine();
 
         } catch (IOException e) {
             e.printStackTrace();
+        }
+        catch (Exception ex) {
+            ex.printStackTrace();
         }
 
         System.out.println(text);
