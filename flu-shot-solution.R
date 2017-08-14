@@ -6,49 +6,86 @@ tweets = read.csv("flu-shot.converted.csv", stringsAsFactors = FALSE, header = F
 # add header
 colnames(tweets) = c('tweet', 'favorite_count')
 
+
+install.packages("tm")
+install.packages("tidytext")
+install.packages("tidyr")
+install.packages("dplyr")
+install.packages("SnowballC")
+install.packages("topicmodels")
+install.packages("ggplot2")
+
 library(tm)
 library(tidytext)
 library(tidyr)
 library(dplyr)
 library(SnowballC)
+library(topicmodels)
+library(ggplot2)
 
-getTweetSentimentScore = function(message) {
-  text <- c(message)
-  text_df <- data_frame(line = 1:1, text = text)
-  tidyMessage = unnest_tokens(text_df, "word", "text")
-  
-  data("stop_words")
-  
-  # remove stop words
-  cleanMessage = anti_join(tidyMessage, stop_words, by="word")
-  
-  mySentiments = get_sentiments("afinn");
-  
-  mySentiments = mutate(mySentiments, word = wordStem(word))
-  mySentiments = mySentiments[!duplicated(mySentiments),]
-  #bing_sentiments = unique(bing_sentiments)
 
-  # stemming, sacasm, etc using SnowballC
-  cleanMessage = mutate(cleanMessage, word = wordStem(word))
-  
-  #create negative, positive words
-  sentimentMessage = inner_join(cleanMessage, mySentiments, by="word")
+index = c(1:length(tweets$tweet))
+tweets$tweetId = index;
 
-  #sentiment score = counting negative, positive and make decision of the message sentiment
-  return (sum(sentimentMessage$score))
+tidyTweets = unnest_tokens(tweets, "word", "tweet")
+
+cleanTweets = anti_join(tidyTweets, stop_words, by="word")
+
+mySentiments = get_sentiments("afinn");
+mySentiments = mutate(mySentiments, word = wordStem(word))
+mySentiments = mySentiments[!duplicated(mySentiments),]
+
+cleanTweets = mutate(cleanTweets, word = wordStem(word))
+
+str(cleanTweets)
+
+#create negative, positive words
+sentimentTweets = inner_join(cleanTweets, mySentiments, by="word")
+str(sentimentTweets)
+
+positiveTweets = sentimentTweets[sentimentTweets$score >= 3,]
+negativeTweets = sentimentTweets[sentimentTweets$score <= -3,]
+neutralTweets = sentimentTweets[sentimentTweets$score < 3 & sentimentTweets$score > -3,]
+
+
+showTopicAndPopularTerms = function (clusteredTweets, noTopics, noTopTerms) {
+  # positive topics
+  word_counts = count(clusteredTweets, tweetId, word, sort = TRUE) 
+  clusteredTweets_dtm = cast_dtm(word_counts, tweetId, word, n) 
+  
+  clusteredTweets_lda = LDA(clusteredTweets_dtm, k = noTopics, control = list(seed = 1234))
+  clusteredTweets_topics = tidy(clusteredTweets_lda, matrix = "beta")
+  # top 5 terms in each topic
+  top_terms = clusteredTweets_topics %>%
+    group_by(topic) %>%
+    top_n(noTopTerms, beta) %>%
+    ungroup() %>%
+    arrange(topic, -beta)
+  
+  top_terms
+  
+  return (top_terms)
 }
 
-testTweets = tweets[1:10, ]
-tweetSentimentScore = lapply(testTweets$tweet, getTweetSentimentScore)
-testTweets$sentiment = tweetSentimentScore
+plotTermsAndTopics = function(top_terms) {
+  top_terms %>%
+    mutate(term = reorder(term, beta)) %>%
+    ggplot(aes(term, beta, fill = factor(topic))) +
+    geom_col(show.legend = FALSE) +
+    facet_wrap(~ topic, scales = "free") +
+    coord_flip()
+}
 
-positiveTweets = testTweets[testTweets$sentiment >= 3, ]
-negativeTweets = testTweets[testTweets$sentiment <= -3, ]
-neutralTweets = testTweets[(testTweets$sentiment) > -3 & (testTweets$sentiment < 3), ]
-library(topicmodels)
-lda = LDA(positiveTweets$tweet, control = list(alpha = 0.1), k = 2)
-str(positiveTweets)
+# positive topics
+positiveTopTerms = getTopicAndPopularTerms(positiveTweets, 4, 5)
+plotTermsAndTopics(positiveTopTerms)
 
-# data("AssociatedPress", package="topicmodels")
-# 
-# str(AssociatedPress)
+#negative
+negativeTopTerms = getTopicAndPopularTerms(negativeTweets, 4, 5)
+plotTermsAndTopics(negativeTopTerms)
+
+#netral
+neutralTopTerms = getTopicAndPopularTerms(neutralTweets, 4, 5)
+plotTermsAndTopics(neutralTopTerms)
+
+
