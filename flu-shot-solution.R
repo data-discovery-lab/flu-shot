@@ -48,7 +48,7 @@ negativeTweets = sentimentTweets[sentimentTweets$score <= -3,]
 neutralTweets = sentimentTweets[sentimentTweets$score < 3 & sentimentTweets$score > -3,]
 
 
-showTopicAndPopularTerms = function (clusteredTweets, noTopics, noTopTerms) {
+getTopicAndPopularTerms = function (clusteredTweets, noTopics, noTopTerms) {
   # positive topics
   word_counts = count(clusteredTweets, tweetId, word, sort = TRUE) 
   clusteredTweets_dtm = cast_dtm(word_counts, tweetId, word, n) 
