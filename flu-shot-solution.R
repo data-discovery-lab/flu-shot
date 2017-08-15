@@ -1,10 +1,13 @@
 # flu-shot analysis
 
 # step1. loead data into memory
-tweets = read.csv("flu-shot.converted.csv", stringsAsFactors = FALSE, header = FALSE)
-
+setwd("~/Desktop/SOURCES/flue-shot")
+tweets = read.csv("flu-shot.converted.csv", stringsAsFactors = FALSE, header = TRUE)
+index = c(1:length(tweets$tweet))
+tweets$tweetId = index;
+str(tweets)
 # add header
-colnames(tweets) = c('tweet', 'favorite_count')
+#colnames(tweets) = c('tweet', 'favorite_count')
 
 
 install.packages("tm")
@@ -24,9 +27,6 @@ library(topicmodels)
 library(ggplot2)
 library(stringr)
 
-
-str(tweets)
-filter(tweets, !str_detect(tweet, "^RT"))
 replace_reg = "https://t.co/[A-Za-z\\d]+|http://[A-Za-z\\d]+|&amp;|&lt;|&gt;|RT|https"
 unnest_reg = "([^A-Za-z_\\d#@']|'(?![A-Za-z_\\d#@]))"
 
@@ -37,8 +37,8 @@ cleanTweets = tweets %>%
   dplyr::filter(!word %in% stop_words$word,
          str_detect(word, "[a-z]"))
 
-
-View(cleanTweets)
+str(cleanTweets)
+#View(cleanTweets)
 #tidyTweets = unnest_tokens(tweets, "word", "tweet")
 #cleanTweets = anti_join(tidyTweets, stop_words, by="word")
 

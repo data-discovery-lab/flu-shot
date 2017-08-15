@@ -27,23 +27,23 @@ public class Main {
              writer = new BufferedWriter( new OutputStreamWriter(new FileOutputStream(outputFile), StandardCharsets.UTF_8));
 
             // write header
-            writer.write("User Id"); // user id
+            writer.write("user Id"); // user id
             writer.write(",");
-            writer.write("Followers_count"); // followers
+            writer.write("followers_count"); // followers
             writer.write(",");
-            writer.write("Friends_count"); // friends
-            writer.write(",");
-
-            writer.write("Tweet"); // tweet
-            writer.write(",");
-            writer.write("Favorite_count"); // favorite_count
+            writer.write("friends_count"); // friends
             writer.write(",");
 
-            writer.write("Created_at"); // created at
+            writer.write("tweet"); // tweet
             writer.write(",");
-            writer.write("State"); // state
+            writer.write("favorite_count"); // favorite_count
             writer.write(",");
-            writer.write("Country"); // state
+
+            writer.write("created_at"); // created at
+            writer.write(",");
+            writer.write("state"); // state
+            writer.write(",");
+            writer.write("country"); // state
 
 
 
