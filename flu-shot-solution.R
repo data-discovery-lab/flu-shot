@@ -22,14 +22,25 @@ library(dplyr)
 library(SnowballC)
 library(topicmodels)
 library(ggplot2)
+library(stringr)
 
 
-index = c(1:length(tweets$tweet))
-tweets$tweetId = index;
+str(tweets)
+filter(tweets, !str_detect(tweet, "^RT"))
+replace_reg = "https://t.co/[A-Za-z\\d]+|http://[A-Za-z\\d]+|&amp;|&lt;|&gt;|RT|https"
+unnest_reg = "([^A-Za-z_\\d#@']|'(?![A-Za-z_\\d#@]))"
 
-tidyTweets = unnest_tokens(tweets, "word", "tweet")
+cleanTweets = tweets %>% 
+  dplyr::filter(!str_detect(tweet, "^RT")) %>%
+  mutate(text = str_replace_all(tweet, replace_reg, "")) %>%
+  unnest_tokens(word, text, token = "regex", pattern = unnest_reg) %>%
+  dplyr::filter(!word %in% stop_words$word,
+         str_detect(word, "[a-z]"))
 
-cleanTweets = anti_join(tidyTweets, stop_words, by="word")
+
+View(cleanTweets)
+#tidyTweets = unnest_tokens(tweets, "word", "tweet")
+#cleanTweets = anti_join(tidyTweets, stop_words, by="word")
 
 mySentiments = get_sentiments("afinn");
 mySentiments = mutate(mySentiments, word = wordStem(word))
