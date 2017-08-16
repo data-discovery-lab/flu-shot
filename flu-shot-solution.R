@@ -5,9 +5,25 @@ setwd("~/Desktop/SOURCES/flue-shot")
 tweets = read.csv("flu-shot.converted.csv", stringsAsFactors = FALSE, header = TRUE)
 index = c(1:length(tweets$tweet))
 tweets$tweetId = index;
+tweets$state = tolower(tweets$state)
 str(tweets)
 # add header
 #colnames(tweets) = c('tweet', 'favorite_count')
+
+userTweets = split(tweets, tweets$user.Id)
+cat("Number of users: ", length(userTweets))
+cat("Number of tweets: ", nrow(tweets))
+
+stateTweets = split(tweets, tweets$state)
+for(i in 1:length(stateTweets)) {
+  cat("State ", unique(stateTweets[[i]]$state))
+  cat (" Tweet: ", nrow(stateTweets[[i]]))
+  cat("\n")
+}
+cat("Number of states: ", length(stateTweets))
+cat("Number of tweets: ", nrow(tweets))
+
+ggplot(tweets, aes(x = state)) + geom_bar()
 
 
 install.packages("tm")
