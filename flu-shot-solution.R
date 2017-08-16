@@ -65,14 +65,24 @@ mySentiments = mySentiments[!duplicated(mySentiments),]
 cleanTweets = mutate(cleanTweets, word = wordStem(word))
 
 str(cleanTweets)
-
+View(cleanTweets)
 #create negative, positive words
 sentimentTweets = inner_join(cleanTweets, mySentiments, by="word")
 str(sentimentTweets)
 
-positiveTweets = sentimentTweets[sentimentTweets$score >= 3,]
-negativeTweets = sentimentTweets[sentimentTweets$score <= -3,]
-neutralTweets = sentimentTweets[sentimentTweets$score < 3 & sentimentTweets$score > -3,]
+tweets_sentiments = group_by(sentimentTweets, tweetId)
+#compute tweet score
+tweetScore = summarise(tweets_sentiments, tweetScore=sum(score) / n())
+#attach tweetScore to tweet-word table
+sentimentTweets = inner_join(sentimentTweets, tweetScore, by = "tweetId")
+
+min(tweetScore$tweetScore)
+max(tweetScore$tweetScore)
+
+# cluster tweets based on its score
+positiveTweets = sentimentTweets[sentimentTweets$tweetScore >= 1,]
+negativeTweets = sentimentTweets[sentimentTweets$tweetScore <= -1,]
+neutralTweets = sentimentTweets[sentimentTweets$tweetScore < 1 & sentimentTweets$tweetScore > -1,]
 
 
 getTopicAndPopularTerms = function (clusteredTweets, noTopics, noTopTerms) {
@@ -103,7 +113,7 @@ plotTermsAndTopics = function(top_terms) {
     coord_flip()
 }
 
-NUMBER_POPULAR_TERMS = 6
+NUMBER_POPULAR_TERMS = 10
 NUMBER_TOPICS_POSITIVE = 3
 NUMBER_TOPICS_NEGATIVE = 3
 NUMBER_TOPICS_NEUTRAL = 3
@@ -113,6 +123,12 @@ NUMBER_TOPICS_NEUTRAL = 3
 positiveTopTerms = getTopicAndPopularTerms(positiveTweets, NUMBER_TOPICS_POSITIVE, NUMBER_POPULAR_TERMS)
 View(positiveTopTerms)
 plotTermsAndTopics(positiveTopTerms)
+
+length(unique(positiveTweets$tweetId))
+
+length(unique(negativeTweets$tweetId))
+
+length(unique(neutralTweets$tweetId))
 
 #negative
 negativeTopTerms = getTopicAndPopularTerms(negativeTweets, NUMBER_TOPICS_NEGATIVE, NUMBER_POPULAR_TERMS)
