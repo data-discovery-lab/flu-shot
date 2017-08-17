@@ -79,6 +79,8 @@ sentimentTweets = inner_join(sentimentTweets, tweetScore, by = "tweetId")
 min(tweetScore$tweetScore)
 max(tweetScore$tweetScore)
 
+testT = left_join(tweetScore, tweets_sentiments, by = "tweetId")
+
 # cluster tweets based on its score
 positiveTweets = sentimentTweets[sentimentTweets$tweetScore >= 1,]
 negativeTweets = sentimentTweets[sentimentTweets$tweetScore <= -1,]
@@ -139,4 +141,55 @@ plotTermsAndTopics(negativeTopTerms)
 neutralTopTerms = getTopicAndPopularTerms(neutralTweets, NUMBER_TOPICS_NEUTRAL, NUMBER_POPULAR_TERMS)
 View(neutralTopTerms)
 plotTermsAndTopics(neutralTopTerms)
+
+str(positiveTweets)
+
+nrow(positiveTweets)
+length(positiveTweets)
+count(positiveTweets)
+
+## ------- overallll
+
+nrow(tweetScore)
+ggplot(tweetScore, aes(tweetScore) ) +
+  geom_histogram(color="white", binwidth = 0.03)
+
+tweetAndScore = inner_join(tweetScore, tweets, by = "tweetId")
+
+tweetAndScore = tweetAndScore[with(tweetAndScore, order("tweetScore")), ]
+
+View(tweetAndScore)
+
+write.csv(tweetAndScore, file = "tweet.score.csv")
+## ------------ NEGATIVE -------------------------
+
+negativeTweetScores = filter(tweetScore, tweetScore <= -1)
+nrow(negativeTweetScores)
+
+ggplot(negativeTweetScores, aes(tweetScore) ) +
+  geom_histogram(color="white", binwidth = 0.02)
+
+
+testNegativeTweets = filter(negativeTweetScores, tweetScore == -2)
+nrow(testNegativeTweets)
+
+negativeTweetFull = inner_join(testNegativeTweets, tweets, by = "tweetId")
+
+View(negativeTweetFull)
+
+## ----------- POSITIVE -------------------------
+ggplot(positiveTweets, aes(tweetScore) ) +
+  geom_histogram(color="white", binwidth = 0.05)
+
+ggplot(positiveTweets, aes(tweetScore)) +
+  geom_density()
+
+
+ggplot(data=positiveTweets) +
+  geom_histogram( aes(tweetScore, ..density..), bins=50 ) +
+  geom_density( aes(tweetScore, ..density..) ) +
+  geom_rug( aes(tweetScore) )
+
+
+
 
