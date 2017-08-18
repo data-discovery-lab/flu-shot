@@ -156,7 +156,7 @@ ggplot(tweetScore, aes(tweetScore) ) +
 
 tweetAndScore = inner_join(tweetScore, tweets, by = "tweetId")
 
-tweetAndScore = tweetAndScore[with(tweetAndScore, order("tweetScore")), ]
+tweetAndScore = tweetAndScore[ order(tweetAndScore$tweetScore) , ]
 
 View(tweetAndScore)
 
@@ -192,4 +192,17 @@ ggplot(data=positiveTweets) +
 
 
 
+
+test_sentiments = get_sentiments("afinn");
+
+View(test_sentiments[test_sentiments$score == 0, ])
+
+test_sentiments[test_sentiments$word == "like",]
+
+fluShotTweets = filter(tweetAndScore, grepl("shot", tweet, ignore.case = TRUE))
+nrow(fluShotTweets)
+
+View(fluShotTweets)
+
+write.csv(fluShotTweets, file = "flushot.tweets.csv")
 
