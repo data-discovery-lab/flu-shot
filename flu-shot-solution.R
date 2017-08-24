@@ -57,6 +57,7 @@ str(cleanTweets)
 #View(cleanTweets)
 #tidyTweets = unnest_tokens(tweets, "word", "tweet")
 #cleanTweets = anti_join(tidyTweets, stop_words, by="word")
+View(cleanTweets[cleanTweets$tweetId == 1604, ])
 
 mySentiments = get_sentiments("afinn");
 mySentiments = mutate(mySentiments, word = wordStem(word))
@@ -205,4 +206,36 @@ nrow(fluShotTweets)
 View(fluShotTweets)
 
 write.csv(fluShotTweets, file = "flushot.tweets.csv")
+#### analysis
+
+sentimentTweets %>%
+  count(word, sort = TRUE)
+
+library(devtools)
+install_github("dgrtwo/widyr")
+library(widyr)
+
+## word pare analysis
+str(sentimentTweets)
+tweet_word_pairs = sentimentTweets %>% 
+  pairwise_count(word, tweetId, sort = TRUE, upper = FALSE)
+
+tweet_word_pairs
+
+
+library(ggplot2)
+library(igraph)
+library(ggraph)
+
+set.seed(1234)
+tweet_word_pairs %>%
+  filter(n >= 250) %>%
+  graph_from_data_frame() %>%
+  ggraph(layout = "fr") +
+  geom_edge_link(aes(edge_alpha = n, edge_width = n), edge_colour = "cyan4") +
+  geom_node_point(size = 5) +
+  geom_node_text(aes(label = name), repel = TRUE, 
+                 point.padding = unit(0.2, "lines")) +
+  theme_void()
+
 
