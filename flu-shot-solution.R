@@ -229,7 +229,7 @@ library(ggraph)
 
 set.seed(1234)
 tweet_word_pairs %>%
-  filter(n >= 250) %>%
+  filter(n >= 80) %>%
   graph_from_data_frame() %>%
   ggraph(layout = "fr") +
   geom_edge_link(aes(edge_alpha = n, edge_width = n), edge_colour = "cyan4") +
