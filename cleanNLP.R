@@ -19,3 +19,15 @@ get_document(obj)
 
 
 get_token(obj)
+
+
+library("arules")
+data("Groceries")
+
+Groceries
+
+rules <- apriori(Groceries, parameter = list(support = .001))
+
+rules
+
+inspect(head(sort(rules, by = "lift"), 3))
