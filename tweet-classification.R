@@ -33,14 +33,14 @@ findFreqTerms(dtmTweets, lowfreq = 20)
 
 # Filter out sparse terms by keeping only terms that appear in 0.3% or more of the revisions
 sparseTweets = removeSparseTerms(dtmTweets, 0.997)
-sparseTweets
+
 
 cleanTweets = as.data.frame(as.matrix(sparseTweets))
 cleanTweets$takeFluShot = tweets$Take.flu.shot
 
 colnames(cleanTweets) = make.names(colnames(cleanTweets))
-  
-str(cleanTweets)
+
+str(cleanTweets)  
 
 library(caTools)
 set.seed(456)
@@ -65,3 +65,13 @@ predTrain <- predict(trialsCART)[,2]
 # Accuracy on the training set
 t1 <- table(train$trial, predTrain >= 0.5)
 (t1[1,1] + t1[2,2])/(sum(t1))
+
+
+
+### convert to short tweet
+mdat <- matrix(c(1,2,3, 11,12,13), nrow = 2, ncol=3, byrow=TRUE, 
+               dimnames = list(c("row1", "row2"), c("C.1", "C.2", "C.3")))
+
+## get columns of item
+colnames(mdat)[apply(mdat, 2, function(u) any(u < 3))]
+
