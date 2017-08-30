@@ -28,7 +28,7 @@ public class Main {
         }
 
 
-        try (Stream<Path> paths = Files.walk(Paths.get("data/TEST"))) {
+        try (Stream<Path> paths = Files.walk(Paths.get("data/TEST/2014"))) {
             paths
                     .filter(Files::isRegularFile)
                     .forEach(f -> convertFile(f.toString()));
@@ -39,33 +39,38 @@ public class Main {
     }
 
     private static String getOutputFilename(String inputFile) {
-        String outputFolder = "data/converted";
+        String outputFolder = "data/converted/2014";
         String fName = inputFile.substring(inputFile.lastIndexOf("/") + 1, inputFile.lastIndexOf(".")) + ".converted.csv";
 
         return outputFolder + "/" + fName;
     }
 
     private static void convertFile(String fileName) {
+        if (fileName == null || fileName.isEmpty()) {
+            return;
+        }
+
         String outputFile = getOutputFilename(fileName);
+        String tweetDate = fileName.substring(fileName.lastIndexOf("/") + 1, fileName.lastIndexOf("."));
 
         try (Stream<String> stream = Files.lines(Paths.get(fileName))) {
 //            file = new File(outputFile);
             writer = new BufferedWriter( new OutputStreamWriter(new FileOutputStream(outputFile), StandardCharsets.UTF_8));
 
             // write header
-            writer.write("user Id"); // user id
+            writer.write("user"); // user id
             writer.write(",");
 
             writer.write("tweet"); // tweet
             writer.write(",");
 
-            writer.write("created_at"); // created at
+            writer.write("date"); // created at
             writer.write(",");
             writer.write("state"); // state
 
             writer.newLine();
 
-            stream.forEachOrdered(l -> processLine(l));
+            stream.forEachOrdered(l -> processLine(l, tweetDate));
 
             writer.flush();
             writer.close();
@@ -75,7 +80,7 @@ public class Main {
         }
     }
 
-    public static void processLine(String l) {
+    public static void processLine(String l, String tweetDate) {
 
         JSONObject obj = new JSONObject(l);
 
@@ -98,7 +103,7 @@ public class Main {
             writer.write(",");
             writer.write(StringEscapeUtils.escapeCsv(text)); // tweet
             writer.write(",");
-            writer.write(obj.getString("created_at")); // created at
+            writer.write(tweetDate); // created at
 
             JSONObject tweetLoc = obj.getJSONObject("geocoded");
             if (tweetLoc != null) {
