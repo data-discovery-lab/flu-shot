@@ -6,7 +6,9 @@ import org.json.JSONObject;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.stream.Stream;
 
 public class Main {
@@ -15,16 +17,40 @@ public class Main {
     private static CsvWriter csvWriter = new CsvWriter();
     private static BufferedWriter writer;
 
+    private static List<String> fileList;
+
     public static void main(String[] args) throws Exception{
 
         String fileName = "flu-shot.json";
-        String outputFile = "flu-shot.converted.csv";
+
+        if (args.length > 0 && args[0].length() > 0) {
+            fileName = args[0];
+        }
 
 
+        try (Stream<Path> paths = Files.walk(Paths.get("data/TEST"))) {
+            paths
+                    .filter(Files::isRegularFile)
+                    .forEach(f -> convertFile(f.toString()));
+        }
+
+//        convertFile(fileName);
+
+    }
+
+    private static String getOutputFilename(String inputFile) {
+        String outputFolder = "data/converted";
+        String fName = inputFile.substring(inputFile.lastIndexOf("/") + 1, inputFile.lastIndexOf(".")) + ".converted.csv";
+
+        return outputFolder + "/" + fName;
+    }
+
+    private static void convertFile(String fileName) {
+        String outputFile = getOutputFilename(fileName);
 
         try (Stream<String> stream = Files.lines(Paths.get(fileName))) {
 //            file = new File(outputFile);
-             writer = new BufferedWriter( new OutputStreamWriter(new FileOutputStream(outputFile), StandardCharsets.UTF_8));
+            writer = new BufferedWriter( new OutputStreamWriter(new FileOutputStream(outputFile), StandardCharsets.UTF_8));
 
             // write header
             writer.write("user Id"); // user id
@@ -55,8 +81,7 @@ public class Main {
 
         String text = obj.getString("text");
 
-        String lang = obj.getString("lang");
-        if (text == null || text.isEmpty() || lang == null || !lang.toLowerCase().equals("en")) {
+        if (text == null || text.isEmpty() ) {
             return;
         }
 
