@@ -29,23 +29,13 @@ public class Main {
             // write header
             writer.write("user Id"); // user id
             writer.write(",");
-            writer.write("followers_count"); // followers
-            writer.write(",");
-            writer.write("friends_count"); // friends
-            writer.write(",");
 
             writer.write("tweet"); // tweet
-            writer.write(",");
-            writer.write("favorite_count"); // favorite_count
             writer.write(",");
 
             writer.write("created_at"); // created at
             writer.write(",");
             writer.write("state"); // state
-            writer.write(",");
-            writer.write("country"); // state
-
-
 
             writer.newLine();
 
@@ -66,37 +56,29 @@ public class Main {
         String text = obj.getString("text");
 
         String lang = obj.getString("lang");
-        if (lang == null || !lang.toLowerCase().equals("en")) {
+        if (text == null || text.isEmpty() || lang == null || !lang.toLowerCase().equals("en")) {
             return;
         }
 
-        int favorourites_count = obj.getInt("favorite_count");
+        if (!text.toLowerCase().contains("shot")) {
+            return;
+        }
+
 
         try {
 
             JSONObject user = obj.getJSONObject("user");
-            String userLocation = user.getString("location");
 
             writer.write(user.getString("id_str")); // user id
             writer.write(",");
-            writer.write(String.valueOf(user.getInt("followers_count"))); // followers
-            writer.write(",");
-            writer.write(String.valueOf(user.getInt("friends_count"))); // friends
-            writer.write(",");
-
             writer.write(StringEscapeUtils.escapeCsv(text)); // tweet
-            writer.write(",");
-            writer.write(String.valueOf(favorourites_count)); // favorite_count
             writer.write(",");
             writer.write(obj.getString("created_at")); // created at
 
             JSONObject tweetLoc = obj.getJSONObject("geocoded");
-
             if (tweetLoc != null) {
                 writer.write(",");
                 writer.write(tweetLoc.optString("state")); // state
-                writer.write(",");
-                writer.write(tweetLoc.optString("country")); // state
             }
 
 
