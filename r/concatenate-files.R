@@ -8,4 +8,22 @@ files = list.files(pattern="*.csv")
 
 myData = do.call(rbind, lapply(files, function(x) read.csv(x, stringsAsFactors = FALSE)))
 nrow(myData)
+
+str(myData)
+
+## remove dulicate user
+myData = myData[!duplicated(myData[, c("user")]),]
+
+## remove duplicate tweet
+myData = myData[!duplicated(myData[, c("tweet")]),]
+
 write.csv(myData, file = "all-tweets-2014.csv")
+
+
+## create label data
+
+labeledData = myData[sample(nrow(myData), 1000), ]
+str(labeledData)
+nrow(labeledData)
+
+write.csv(labeledData, file = "labeled-tweets-2014.csv")
