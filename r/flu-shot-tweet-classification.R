@@ -35,8 +35,7 @@ tweets = read.csv("labeled-tweet-flu-shot.csv", stringsAsFactors = FALSE)
 str(tweets)
 sum(tweets$negativeFlushot)
 
-createDTMCleanTweet = function(tweets) {
-  
+cleanTweet = function(tweets) {
   replace_reg = "https://t.co/[A-Za-z\\d]+|http://[A-Za-z\\d]+|&amp;|&lt;|&gt;|RT|https"
   unnest_reg = "([^A-Za-z_\\d#@']|'(?![A-Za-z_\\d#@]))"
   
@@ -46,8 +45,10 @@ createDTMCleanTweet = function(tweets) {
   tweets$tweet = tweets$text
   tweets$text = NULL
   
-  str(tweets)
-  
+  return(tweets)
+}
+
+createDTMCleanTweet = function(tweets) {
   
   # Create Corpus
   tweetCorpus = Corpus(VectorSource(tweets$tweet))
@@ -81,6 +82,7 @@ createDTMCleanTweet = function(tweets) {
   return(cleanTweets)
 }
 
+tweets = cleanTweet(tweets)
 
 cleanTweets = createDTMCleanTweet(tweets)
 
