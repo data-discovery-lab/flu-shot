@@ -95,8 +95,9 @@ prp(tweetCART)
 predictCart <- predict(tweetCART, newData=testSparse, type="class")
 
 str(predictCart)
-
 str(testSparse$negativeFlushot)
+
+## accuracy test
 table(testSparse$negativeFlushot, predictCart)
 
 
