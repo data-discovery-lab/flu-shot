@@ -52,19 +52,31 @@ transactions = transactions %>%
   dplyr::filter(upos %in% meanfulUniversalPartOfSpeech,
                 str_detect(word, "[a-z]"))
 
-transactionData <- transactions[, c('id', 'lemma')]
+colnames(tweets)[1] = "id"
+str(transactions)
+str(tweets)
 
-colnames(transactionData) = c('transactionId', 'item')
+transactionData = inner_join(transactions, tweets, by="id")
+transactionData <- transactionData[, c('id', 'lemma', 'predictedNegativeFlushot')]
+
+colnames(transactionData) = c('transactionId', 'item', 'negativeFlushot')
+additionalItems = unique(transactionData[c("transactionId", "negativeFlushot")])
+
+transactionData$negativeFlushot = NULL
 str(transactionData)
 
+# count word frequencies
+count(transactionData, item, sort = TRUE )
 
 
-myAdditionalItems = as.data.frame(unique(transactionData$transactionId))
-colnames(myAdditionalItems) = c('transactionId')
-myAdditionalItems$item = 'negative-flu-shot'
+additionalItems$negativeFlushot[additionalItems$negativeFlushot == 1] = "negative-flu-shot" 
+additionalItems$negativeFlushot[additionalItems$negativeFlushot == 0] = "none-negative-flu-shot" 
 
-str(myAdditionalItems)
+colnames(additionalItems) =  c('transactionId', 'item')
+str(additionalItems)
 
-finalTransactionData <- rbind(transactionData, myAdditionalItems)
+finalTransactionData <- rbind(transactionData, additionalItems)
 
-write.csv(finalTransactionData, file = "tweet-transaction.csv")
+str(finalTransactionData)
+
+write.csv(finalTransactionData, file = "tweet-transaction.csv", row.names=FALSE)
