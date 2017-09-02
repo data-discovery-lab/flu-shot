@@ -1,4 +1,6 @@
-# Data
+# This file will classify tweets into two categories (negative-flu-shot and none-negative-flu-shot)
+# once classifiation is done, two separated files are created serve as input for association rules
+
 install.packages("devtools")
 
 
