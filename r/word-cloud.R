@@ -2,6 +2,9 @@ library(wordcloud2)
 library(SnowballC)
 
 words = read.csv(file = "tweet-word-transaction.csv", sep = ",")
+words$item[words$item == 'dead'] = 'die'
+words$item[words$item == 'paralyzed'] = 'paralyze'
+
 
 str(words)
 
