@@ -133,3 +133,10 @@ str(dtmCompleteTweets)
 predictCompleteTweets <- predict(tweetCART, newdata=cleanTweets, type="class")
 
 summary(predictCompleteTweets)
+
+predictedNegativeFluShot = as.integer(as.character(predictCompleteTweets))
+tweets$predictedNegativeFlushot = predictedNegativeFluShot
+str(tweets)
+
+write.csv(tweets, file = "predicted-flu-shot.csv")
+
