@@ -100,6 +100,14 @@ str(testSparse$negativeFlushot)
 ## accuracy test
 table(testSparse$negativeFlushot, predictCart)
 
+# baseline model (always )
+table(testSparse$negativeFlushot)
+
+levels(predictCart)
+summary(predictCart)
+
+## convert to ordered item, so that we can map to original data
+as.integer(as.character(predictCart))
 
 
 
