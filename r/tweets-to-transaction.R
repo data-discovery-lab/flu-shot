@@ -62,21 +62,28 @@ transactionData <- transactionData[, c('id', 'lemma', 'predictedNegativeFlushot'
 colnames(transactionData) = c('transactionId', 'item', 'negativeFlushot')
 additionalItems = unique(transactionData[c("transactionId", "negativeFlushot")])
 
-transactionData$negativeFlushot = NULL
 str(transactionData)
 
 # count word frequencies
 count(transactionData, item, sort = TRUE )
 
+additionalItems$item = additionalItems$negativeFlushot
+additionalItems$item[additionalItems$negativeFlushot == 1] = "negative-flu-shot" 
+additionalItems$item[additionalItems$negativeFlushot == 0] = "none-negative-flu-shot" 
 
-additionalItems$negativeFlushot[additionalItems$negativeFlushot == 1] = "negative-flu-shot" 
-additionalItems$negativeFlushot[additionalItems$negativeFlushot == 0] = "none-negative-flu-shot" 
-
-colnames(additionalItems) =  c('transactionId', 'item')
 str(additionalItems)
 
 finalTransactionData <- rbind(transactionData, additionalItems)
 
 str(finalTransactionData)
 
-write.csv(finalTransactionData, file = "tweet-transaction.csv", row.names=FALSE)
+negativeFlushotData = finalTransactionData[finalTransactionData$negativeFlushot == 1,]
+negativeFlushotData = negativeFlushotData[c('transactionId', 'item')]
+write.csv(negativeFlushotData[c('transactionId', 'item')], file = "negative-tweet-transaction.csv", row.names=FALSE)
+
+noneNegativeFlushotData = finalTransactionData[finalTransactionData$negativeFlushot == 0,]
+noneNegativeFlushotData = noneNegativeFlushotData[c('transactionId', 'item')]
+write.csv(noneNegativeFlushotData[c('transactionId', 'item')], file = "none-negative-tweet-transaction.csv", row.names=FALSE)
+
+write.csv(transactionData, file = "tweet-word-transaction.csv", row.names=FALSE)
+
