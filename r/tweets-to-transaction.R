@@ -57,5 +57,14 @@ transactionData <- transactions[, c('id', 'lemma')]
 colnames(transactionData) = c('transactionId', 'item')
 str(transactionData)
 
-write.csv(transactionData, file = "tweet-transaction.csv")
 
+
+myAdditionalItems = as.data.frame(unique(transactionData$transactionId))
+colnames(myAdditionalItems) = c('transactionId')
+myAdditionalItems$item = 'negative-flu-shot'
+
+str(myAdditionalItems)
+
+finalTransactionData <- rbind(transactionData, myAdditionalItems)
+
+write.csv(finalTransactionData, file = "tweet-transaction.csv")
