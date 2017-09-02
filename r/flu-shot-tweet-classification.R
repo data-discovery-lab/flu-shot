@@ -92,13 +92,14 @@ prp(tweetCART)
 
 
 # Predict using the trainig set. Because the CART tree assigns the same predicted probability to each leaf node and there are a small number of leaf nodes compared to data points, we expect exactly the same maximum predicted probability.
-predictCart <- predict(tweetCART, newData=testSparse, type="class")
+predictCart <- predict(tweetCART, newdata=testSparse, type="class")
 
 str(predictCart)
 str(testSparse$negativeFlushot)
 
 ## accuracy test
 table(testSparse$negativeFlushot, predictCart)
+
 
 
 
