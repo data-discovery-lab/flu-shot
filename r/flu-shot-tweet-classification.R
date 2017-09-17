@@ -12,11 +12,9 @@ install.packages("dplyr")
 install.packages("SnowballC")
 install.packages("topicmodels")
 install.packages("ggplot2")
+install.packages("devtools")
 
 library(devtools)
-install_url("https://cran.r-project.org/src/contrib/slam_0.1-40.tar.gz")
-
-
 library(tm)
 library(tidytext)
 library(tidyr)
@@ -27,8 +25,7 @@ library(ggplot2)
 library(stringr)
 
 set.seed(123)
-#setwd("~/TTU-SOURCES/flu-shot")
-setwd("~/Desktop/SOURCES/flue-shot")
+setwd("~/TTU-SOURCES/flu-shot")
 
 tweets = read.csv("labeled-tweet-flu-shot.csv", stringsAsFactors = FALSE)
 
@@ -93,8 +90,11 @@ set.seed(456)
 spl = sample.split(cleanTweets$negativeFlushot, SplitRatio = 0.7)
 trainSparse = subset(cleanTweets, spl == TRUE)
 testSparse = subset(cleanTweets, spl == FALSE)
-
+## trainSparse now has 700 rows (70%) 
+nrow(trainSparse)
 str(testSparse)
+## testSparse now has 300 rows (30%)
+nrow(testSparse)
 # CART Model
 library(rpart)
 library(rpart.plot)
