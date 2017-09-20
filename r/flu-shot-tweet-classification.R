@@ -27,7 +27,11 @@ library(stringr)
 set.seed(123)
 setwd("~/TTU-SOURCES/flu-shot")
 
+# without pre-processing data
 tweets = read.csv("labeled-tweet-flu-shot.csv", stringsAsFactors = FALSE)
+
+# with pre-processing data
+#tweets = read.csv("data/convertedTweets.csv", stringsAsFactors = FALSE)
 
 str(tweets)
 sum(tweets$negativeFlushot)
