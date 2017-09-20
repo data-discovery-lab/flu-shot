@@ -5,11 +5,19 @@ library(tidytext)
 
 setwd("~/TTU-SOURCES/flu-shot")
 
-text <- c("Flu shots do not work",
-          "Get the flu shot they said. You won't get sick",
-          "I work at a hospital and we have to get the flu shot. I'm only person in family to not get sick this year"
-          )
+# text <- c("Flu shots do not work",
+#           "Get the flu shot they said. You won't get sick",
+#           "I work at a hospital and we have to get the flu shot. I'm only person in family to not get sick this year",
+#           "I haven't had any type of flu shot or vaccine in years. I don't trust em"
+#           )
 
+
+
+text <- c("flu shot do ineffective",
+"get the flu shot they said you will avoid sick",
+"i work at a hospital and we have to get the flu shot I'm only person in family to avoid sick this year",
+"have not had any type of flu shot or flu shot in years i do suspect em"
+)
 
 
 text_df <- data_frame(line = 1:length(text), text = text)
@@ -25,6 +33,20 @@ custom_stop_words <- bind_rows(custom_stop_words,
                                data_frame(word = "shots",
                                           lexicon = "custom"))
 
+custom_stop_words <- bind_rows(custom_stop_words,
+                               data_frame(word = "person",
+                                          lexicon = "custom"))
+custom_stop_words <- bind_rows(custom_stop_words,
+                               data_frame(word = "family",
+                                          lexicon = "custom"))
+
+custom_stop_words <- bind_rows(custom_stop_words,
+                               data_frame(word = "vaccine",
+                                          lexicon = "custom"))
+
+custom_stop_words <- bind_rows(custom_stop_words,
+                               data_frame(word = "hospital",
+                                          lexicon = "custom"))
 
 words =text_df %>%
   unnest_tokens(word, text) %>%
