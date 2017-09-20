@@ -5,22 +5,25 @@ library(tidytext)
 
 setwd("~/TTU-SOURCES/flu-shot")
 
-# text <- c("Flu shots do not work",
-#           "Get the flu shot they said. You won't get sick",
-#           "I work at a hospital and we have to get the flu shot. I'm only person in family to not get sick this year",
-#           "I haven't had any type of flu shot or vaccine in years. I don't trust em"
-#           )
+text <- c("Flu shots do not work",
+          "Get the flu shot they said. You won't get sick",
+          "I work at a hospital and we have to get the flu shot. I'm only person in family to not get sick this year",
+          "I haven't had any type of flu shot or vaccine in years. I don't trust em",
+          "Another precious child dies from flu complications after getting flu shot!",
+          "Flu-related death toll doubles in Wash State"
+          )
 
 
 
 text <- c("flu shot do ineffective",
 "get the flu shot they said you will avoid sick",
 "i work at a hospital and we have to get the flu shot I'm only person in family to avoid sick this year",
-"have not had any type of flu shot or flu shot in years i do suspect em"
+"have not had any type of flu shot or flu shot in years i do suspect em",
+"Another precious child die from flu complications after getting flu shot!",
+"Flu-related die toll doubles in Wash State"
 )
 
 
-text_df <- data_frame(line = 1:length(text), text = text)
 
 custom_stop_words = stop_words
 custom_stop_words <- bind_rows(custom_stop_words,
