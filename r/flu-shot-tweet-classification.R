@@ -110,35 +110,53 @@ str(predictCart)
 str(testSparse$negativeFlushot)
 
 ## accuracy test
-table(testSparse$negativeFlushot, predictCart)
+confusionMatrix = table(testSparse$negativeFlushot, predictCart)
+confusionMatrix
+confusionMatrix[1,1]
+
+a = confusionMatrix[2,2] 
+b = confusionMatrix[2,1]
+c = confusionMatrix[1, 2]
+d = confusionMatrix[1, 1]
+precision = a / (a + c)
+precision
+
+recall = a / (a + b)
+recall
+
+fMeasure = 2*a / (2*a + b + c)
+fMeasure
+
+accuracy = (a + d) / (a + b + c +d)
+accuracy
 
 # baseline model (always )
-table(testSparse$negativeFlushot)
+# table(testSparse$negativeFlushot)
+# 
+# levels(predictCart)
+# summary(predictCart)
 
-levels(predictCart)
-summary(predictCart)
-
-## convert to ordered item, so that we can map to original data
-orderedCategories = as.integer(as.character(predictCart))
-
-## load complete data file and do prediction, then categorize each tweet
-completeTweets = read.csv("all-tweets-2014.csv", stringsAsFactors = FALSE)
-
-str(completeTweets)
-
-nrow(completeTweets)
-str(completeTweets)
-
-dtmCompleteTweets = createDTMCleanTweet(completeTweets)
-
-str(dtmCompleteTweets)
-predictCompleteTweets <- predict(tweetCART, newdata=cleanTweets, type="class")
-
-summary(predictCompleteTweets)
-
-predictedNegativeFluShot = as.integer(as.character(predictCompleteTweets))
-tweets$predictedNegativeFlushot = predictedNegativeFluShot
-str(tweets)
-
-write.csv(tweets, file = "predicted-flu-shot.csv")
+# ## convert to ordered item, so that we can map to original data
+# orderedCategories = as.integer(as.character(predictCart))
+# 
+# ## load complete data file and do prediction, then categorize each tweet
+# completeTweets = read.csv("all-tweets-2014.csv", stringsAsFactors = FALSE)
+# 
+# str(completeTweets)
+# 
+# nrow(completeTweets)
+# str(completeTweets)
+# 
+# dtmCompleteTweets = createDTMCleanTweet(completeTweets)
+# 
+# str(dtmCompleteTweets)
+# predictCompleteTweets <- predict(tweetCART, newdata=cleanTweets, type="class")
+# 
+# summary(predictCompleteTweets)
+# 
+# predictedNegativeFluShot = as.integer(as.character(predictCompleteTweets))
+# tweets$predictedNegativeFlushot = predictedNegativeFluShot
+# str(tweets)
+# 
+# write.csv(tweets, file = "predicted-flu-shot.csv")
 
