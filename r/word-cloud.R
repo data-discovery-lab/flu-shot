@@ -24,7 +24,7 @@ tweets = cleanTweet(tweets)
 
 str(tweets)
 
-additionalStopWords = c("flu", "shot", "shots", "person", "family", "hospital", "hospital")
+additionalStopWords = c("flu", "shot", "shots", "feel", "like", "thank", "can", "may", "get", "got", "gotten", "think", "flushot")
 additionalStopWords_df <- data_frame(lexicon="custom", word = additionalStopWords)
 
 
