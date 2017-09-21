@@ -3,10 +3,14 @@ library(SnowballC)
 library(stringr)
 library(ggplot2)
 
-# without pre-processing data
 setwd("~/TTU-SOURCES/flu-shot")
 
+# without pre-processing data
 tweets = read.csv("labeled-tweet-flu-shot.csv", stringsAsFactors = FALSE)
+
+# processed tweets
+ # tweets = read.csv("data/convertedTweets.csv", stringsAsFactors = FALSE)
+
 
 cleanTweet = function(tweets) {
   replace_reg = "https://t.co/[A-Za-z\\d]+|http://[A-Za-z\\d]+|&amp;|&lt;|&gt;|RT|https"
@@ -25,7 +29,7 @@ tweets = cleanTweet(tweets)
 
 str(tweets)
 
-additionalStopWords = c("flu", "shot", "shots", "feel", "like", "thank", "can", "may", "get", "got", "gotten", "think", "flushot")
+additionalStopWords = c("flu", "shot", "shots", "feel", "like", "thank", "can", "may", "get", "got", "gotten", "think", "flushot", "rt", "amp", "cdc")
 additionalStopWords_df <- data_frame(lexicon="custom", word = additionalStopWords)
 
 
@@ -35,8 +39,8 @@ custom_stop_words <- bind_rows(custom_stop_words, additionalStopWords_df)
 
 words = tweets %>%
   unnest_tokens(word, tweet) %>%
-  anti_join(custom_stop_words, by = c("word" = "word")) %>%
-  mutate(word = wordStem(word))
+  anti_join(custom_stop_words, by = c("word" = "word")) 
+  # mutate(word = wordStem(word))
 
 
 str(words)
@@ -49,7 +53,7 @@ colnames(wordFreq) = c("word", "freq")
 str(wordFreq)
 
 wordFreq = wordFreq %>%
-  filter(freq >=5 ) %>%
+  filter(freq >=7 ) %>%
   mutate(word = reorder(word, freq))
 
 ggplot(data = wordFreq, aes(word, freq)) + 
