@@ -15,7 +15,7 @@ library(ggraph)
 #setwd("~/TTU-SOURCES/flu-shot")
 setwd("~/Desktop/SOURCES/flue-shot")
 
-preProcessing = FALSE
+preProcessing = TRUE
 #without pre-processing
 if (preProcessing == TRUE) {
   tweets = read.csv("data/convertedTweets.csv", stringsAsFactors = FALSE)
@@ -40,11 +40,14 @@ cleanTweet = function(tweets) {
   return(tweets)
 }
 
+#tweets = tweets[tweets$negativeFlushot == 1,]
 tweets = cleanTweet(tweets)
 
 str(tweets)
+count(tweets)
 
-additionalStopWords = c("flu", "shot", "shots", "feel", "like", "thank", "can", "may", "get", "got", "gotten", "think", "flushot", "rt", "amp", "cdc", "feels")
+
+additionalStopWords = c("feel", "like", "thank", "can", "may", "get", "got", "gotten", "think", "rt", "amp", "cdc", "feels")
 additionalStopWords_df <- data_frame(lexicon="custom", word = additionalStopWords)
 
 
@@ -54,13 +57,15 @@ custom_stop_words <- bind_rows(custom_stop_words, additionalStopWords_df)
 
 words = tweets[tweets$negativeFlushot == 1,] %>%
   unnest_tokens(word, tweet) %>%
-  anti_join(custom_stop_words, by = c("word" = "word"))
+  anti_join(custom_stop_words, by = c("word" = "word")) %>%
+  mutate(word = wordStem(word))
 
-  #mutate(word = wordStem(word))
-
+count(words, word, sort = TRUE) 
 
 word_pairs <- words %>% 
+  #filter(word == 'avoid' ) %>% 
   pairwise_count(word, user, sort = TRUE, upper = FALSE)  %>% 
+  filter(n <= 20 )  %>% 
   filter(n >=3)
 
 
