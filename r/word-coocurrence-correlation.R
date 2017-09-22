@@ -15,7 +15,7 @@ library(ggraph)
 #setwd("~/TTU-SOURCES/flu-shot")
 setwd("~/Desktop/SOURCES/flue-shot")
 
-preProcessing = TRUE
+preProcessing = FALSE
 #without pre-processing
 if (preProcessing == TRUE) {
   tweets = read.csv("data/convertedTweets.csv", stringsAsFactors = FALSE)
