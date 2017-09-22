@@ -78,7 +78,8 @@ word_pairs %>%
   graph_from_data_frame() %>%
   ggraph(layout = "fr") +
   geom_edge_link(aes(edge_alpha = n, edge_width = n), edge_colour = edgeColor) +
-  geom_node_point(size = 5) +
+  geom_node_point(size = 4) +
   geom_node_text(aes(label = name), repel = TRUE, 
-                 point.padding = unit(0.2, "lines")) +
-  theme_void()
+                 point.padding = unit(0.2, "lines"),size=6)+
+  theme_void()+
+  theme(legend.text=element_text(size=16))
