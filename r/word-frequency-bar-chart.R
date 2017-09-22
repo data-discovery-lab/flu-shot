@@ -6,10 +6,10 @@ library(ggplot2)
 setwd("~/TTU-SOURCES/flu-shot")
 
 # without pre-processing data
-tweets = read.csv("labeled-tweet-flu-shot.csv", stringsAsFactors = FALSE)
+#tweets = read.csv("labeled-tweet-flu-shot.csv", stringsAsFactors = FALSE)
 
 # processed tweets
- # tweets = read.csv("data/convertedTweets.csv", stringsAsFactors = FALSE)
+  tweets = read.csv("data/convertedTweets.csv", stringsAsFactors = FALSE)
 
 
 cleanTweet = function(tweets) {
