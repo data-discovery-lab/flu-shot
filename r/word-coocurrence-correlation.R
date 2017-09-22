@@ -5,11 +5,27 @@ library(ggraph)
 library(wordcloud2)
 library(SnowballC)
 library(stringr)
+library(dplyr)
+library(tidytext)
+library(ggplot2)
+library(igraph)
+library(ggraph)
 
 # without pre-processing data
-setwd("~/TTU-SOURCES/flu-shot")
+#setwd("~/TTU-SOURCES/flu-shot")
+setwd("~/Desktop/SOURCES/flue-shot")
 
-tweets = read.csv("labeled-tweet-flu-shot.csv", stringsAsFactors = FALSE)
+preProcessing = FALSE
+#without pre-processing
+if (preProcessing == TRUE) {
+  tweets = read.csv("data/convertedTweets.csv", stringsAsFactors = FALSE)
+}
+
+if (!preProcessing == TRUE) {
+  tweets = read.csv("labeled-tweet-flu-shot.csv", stringsAsFactors = FALSE)
+  
+}
+
 
 cleanTweet = function(tweets) {
   replace_reg = "https://t.co/[A-Za-z\\d]+|http://[A-Za-z\\d]+|&amp;|&lt;|&gt;|RT|https"
@@ -28,7 +44,7 @@ tweets = cleanTweet(tweets)
 
 str(tweets)
 
-additionalStopWords = c("flu", "shot", "shots", "feel", "like", "thank", "can", "may", "get", "got", "gotten", "think", "flushot")
+additionalStopWords = c("flu", "shot", "shots", "feel", "like", "thank", "can", "may", "get", "got", "gotten", "think", "flushot", "rt", "amp", "cdc", "feels")
 additionalStopWords_df <- data_frame(lexicon="custom", word = additionalStopWords)
 
 
@@ -36,8 +52,28 @@ custom_stop_words = stop_words
 custom_stop_words <- bind_rows(custom_stop_words, additionalStopWords_df)
 
 
-words = tweets %>%
+words = tweets[tweets$negativeFlushot == 1,] %>%
   unnest_tokens(word, tweet) %>%
-  anti_join(custom_stop_words, by = c("word" = "word")) %>%
-  mutate(word = wordStem(word))
+  anti_join(custom_stop_words, by = c("word" = "word"))
 
+  #mutate(word = wordStem(word))
+
+
+word_pairs <- words %>% 
+  pairwise_count(word, user, sort = TRUE, upper = FALSE)  %>% 
+  filter(n >=3)
+
+
+
+
+set.seed(1234)
+edgeColor = ifelse(preProcessing, "darkred", "cyan4")
+
+word_pairs %>%
+  graph_from_data_frame() %>%
+  ggraph(layout = "fr") +
+  geom_edge_link(aes(edge_alpha = n, edge_width = n), edge_colour = edgeColor) +
+  geom_node_point(size = 5) +
+  geom_node_text(aes(label = name), repel = TRUE, 
+                 point.padding = unit(0.2, "lines")) +
+  theme_void()
