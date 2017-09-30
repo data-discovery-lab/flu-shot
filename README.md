@@ -3,6 +3,7 @@
 # source code in R under r folder
 
 
+# Visualization: The left figures are not using proposed pre-processing technique. The right figures are.
 
 #### Word frequency
 
