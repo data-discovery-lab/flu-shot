@@ -13,6 +13,7 @@ if (preProcessing == TRUE) {
 }
 
 if (!preProcessing == TRUE) {
+  ## assume the prediction is overfit
   tweets = read.csv("labeled-tweet-flu-shot.csv", stringsAsFactors = FALSE)
 }
 
