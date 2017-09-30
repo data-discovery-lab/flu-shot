@@ -6,7 +6,7 @@ library(ggplot2)
 #setwd("~/TTU-SOURCES/flu-shot")
 setwd("~/Desktop/SOURCES/flue-shot")
 
-preProcessing = TRUE
+preProcessing = FALSE
 #without pre-processing
 if (preProcessing == TRUE) {
   tweets = read.csv("data/convertedTweets.csv", stringsAsFactors = FALSE)
@@ -36,7 +36,7 @@ tweets = cleanTweet(tweets)
 
 str(tweets)
 
-additionalStopWords = c("flu", "shot", "shots", "feel", "like", "thank", "can", "may", "get", "got", "gotten", "think", "flushot", "rt", "amp", "cdc", "people", "mom", "days", "girl", "arm")
+additionalStopWords = c("flu", "shot", "shots", "feel", "like", "thank", "can", "may", "get", "got", "gotten", "think", "flushot", "rt", "amp", "cdc", "people", "mom", "days", "girl", "arm","tampa","virus","time","vaccine")
 additionalStopWords_df <- data_frame(lexicon="custom", word = additionalStopWords)
 
 
@@ -64,14 +64,26 @@ wordFreq = wordFreq %>%
   mutate(word = reorder(word, freq))
 
 fillColor = ifelse(preProcessing, "darkred", "cyan4")
+
 ggplot(data = wordFreq, aes(word, freq)) + 
   geom_col(fill = fillColor) + 
   coord_flip() + 
   labs(x = "Word \n", y = "\n Count", title = "Frequent words in text") +
-  geom_text(aes(label = freq), hjust = 1.2, colour = "white", fontface = "bold") + 
-  theme(plot.title = element_text(size = 18, hjust = 0.5), 
-        axis.title.x = element_text(face = "bold", colour = "black", size = 18),
-        axis.title.y = element_text(face = "bold", colour = "black", size = 18))
+  geom_text(aes(label = freq), hjust = 1.2, colour = "white", fontface = "bold", size=10) + 
+  theme(plot.title = element_text(size = 24, hjust = 0.5), 
+        axis.title.x = element_text(face = "bold", colour = "black", size = 24),
+        axis.title.y = element_text(face = "bold", colour = "black", size = 24),
+        text=element_text(size=24))
+
+
+##  ggplot(data = wordFreq, aes(word, freq), size=14) + 
+##  geom_col(fill = fillColor) + 
+##  coord_flip() + 
+##  labs(x = "Word \n", y = "\n Count", title = "Frequent words in text") +
+##  geom_text(aes(label = freq), hjust = 1.2, colour = "white", fontface = "bold") + 
+##  theme(plot.title = element_text(size = 18, hjust = 0.5), 
+##        axis.title.x = element_text(face = "bold", colour = "black", size = 18),
+##        axis.title.y = element_text(face = "bold", colour = "black", size = 18))
   
 
 
