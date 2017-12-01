@@ -18,6 +18,6 @@ def freqSort(text):
 
 
 print(sys.argv[1])
-with open(sys.argv[1]) as textcsv:
+with open(sys.argv[1], encoding="utf8") as textcsv:
     text = csv.DictReader(textcsv)
     freqSort(text)

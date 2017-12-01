@@ -105,9 +105,9 @@ def parser(inData):
         return synonym(inData)
 
 
-with open(sys.argv[1]) as textcsv:
+with open(sys.argv[1], encoding='utf-8') as textcsv:
     text = csv.DictReader(textcsv)
-    with open(sys.argv[1] + '_converted.csv', 'w') as convertcsv:
+    with open(sys.argv[1] + '_converted.csv', 'w', encoding="utf8") as convertcsv:
         headers = ["oldtext", "newtext"]
         csvwrite = csv.DictWriter(convertcsv, fieldnames=headers)
         csvwrite.writeheader()
