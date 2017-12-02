@@ -1,11 +1,16 @@
-### Visualization: The left figures are not using proposed pre-processing technique. The right figures are.
+###To setup a virtual environment:
+$ pip install virtualenv
+$ virtualenv --python=/path/to/python venvpy36
 
-#### Word frequency
+###To activate the virtual environment:
+$ source venvpy36/bin/activate (for Linux)
+$ venvpy36\Scripts\activate (for Windows)
 
-![Word correlation](https://github.com/litpuvn/flu-shot/blob/master/figures/word-frequency-combined.png)
+###To install the package:
+$ pip install negconvert
 
+###To run the package:
+$ negconvert unalteredTweets.csv
 
-#### Word correlation
-
-![Word correlation](https://github.com/litpuvn/flu-shot/blob/master/figures/word-correlation.png)
-
+###To deactivate the virtual environment
+$ venvpy36\Scripts\deactivate.bat (for Windows)
