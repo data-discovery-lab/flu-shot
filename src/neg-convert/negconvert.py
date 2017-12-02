@@ -1,11 +1,10 @@
-# Andrew Salopek
+# Andrew Salopek, Quan Nguyen
 # Texas Tech University
 
 import csv
 import re
 import enchant
 import sys
-import freq
 import os
 from pathlib import Path
 
@@ -13,6 +12,19 @@ from stanfordcorenlp import StanfordCoreNLP
 
 nlp = StanfordCoreNLP('http://corenlp.run', port=80)
 
+def freqSort(text):
+    frequency = {}
+    if (text):
+        for row in text:
+            match_pattern = re.findall(r'\b[a-z]{3,15}\b', row['text'].lower())
+            for word in match_pattern:
+                count = frequency.get(word, 0)
+                frequency[word] = count + 1
+    filename = Path(sys.argv[1]).stem
+    with open(filename + '_freq.csv', 'w', newline='') as csv_file:
+        writer = csv.writer(csv_file)
+        for key, value in frequency.items():
+            writer.writerow([key, value])
 
 def contraction(inData):
     with open('contractions.csv') as f:
@@ -37,7 +49,8 @@ def affirm(inData):
 def synonym(inData):
     wordList = inData.split()
     # print(wordList, "33")
-    with open(sys.argv[1] + '_freq.csv') as fd:
+    filename = Path(sys.argv[1]).stem
+    with open(filename + '_freq.csv') as fd:
         freqDict = dict(csv.reader(fd, delimiter=','))
     with open('synonyms.csv') as f:
         f.readline()  # ignore first line (header)
@@ -110,10 +123,14 @@ def parser(inData):
 if (not os.path.exists(sys.argv[1])):   # Check if file not found
     raise FileNotFoundError(sys.argv[1])
 
+with open(sys.argv[1], encoding="utf8") as textcsv:
+    text = csv.DictReader(textcsv)
+    freqSort(text)
+
 with open(sys.argv[1], encoding='utf-8') as textcsv:
     text = csv.DictReader(textcsv)
     filename = Path(sys.argv[1]).stem
-    with open(sys.argv[1] + '_converted.csv', 'w', encoding="utf8", newline='') as convertcsv:
+    with open(filename + '_converted.csv', 'w', encoding="utf8", newline='') as convertcsv:
         headers = ["oldtext", "newtext"]
         csvwrite = csv.DictWriter(convertcsv, fieldnames=headers)
         csvwrite.writeheader()
