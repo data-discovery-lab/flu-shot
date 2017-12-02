@@ -4,9 +4,10 @@
 import csv
 import re
 import enchant
-import operator
 import sys
 import freq
+import os
+from pathlib import Path
 
 from stanfordcorenlp import StanfordCoreNLP
 
@@ -104,10 +105,15 @@ def parser(inData):
         print(result, "parser-noresult")
         return synonym(inData)
 
+# Main
+
+if (not os.path.exists(sys.argv[1])):   # Check if file not found
+    raise FileNotFoundError(sys.argv[1])
 
 with open(sys.argv[1], encoding='utf-8') as textcsv:
     text = csv.DictReader(textcsv)
-    with open(sys.argv[1] + '_converted.csv', 'w', encoding="utf8") as convertcsv:
+    filename = Path(sys.argv[1]).stem
+    with open(sys.argv[1] + '_converted.csv', 'w', encoding="utf8", newline='') as convertcsv:
         headers = ["oldtext", "newtext"]
         csvwrite = csv.DictWriter(convertcsv, fieldnames=headers)
         csvwrite.writeheader()
