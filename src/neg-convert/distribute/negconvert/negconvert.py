@@ -12,6 +12,11 @@ from stanfordcorenlp import StanfordCoreNLP
 
 nlp = StanfordCoreNLP('http://corenlp.run', port=80)
 
+_ROOT = os.path.abspath(os.path.dirname(__file__))
+
+def getdatafilepath(path):
+    return os.path.join(_ROOT, path)
+
 def freqSort(text):
     frequency = {}
     if (text):
@@ -27,7 +32,7 @@ def freqSort(text):
             writer.writerow([key, value])
 
 def contraction(inData):
-    with open('contractions.csv') as f:
+    with open(getdatafilepath('contractions.csv')) as f:
         f.readline()  # ignore first line (header)
         mydict = dict(csv.reader(f, delimiter=','))
         pattern = re.compile(r'\b(' + '|'.join(mydict.keys()) + r')\b')
@@ -37,7 +42,7 @@ def contraction(inData):
 
 
 def affirm(inData):
-    with open('opposites.csv') as f:
+    with open(getdatafilepath('opposites.csv')) as f:
         f.readline()  # ignore first line (header)
         mydict = dict(csv.reader(f, delimiter=','))
         pattern = re.compile(r'not\s(' + '|'.join(mydict.keys()) + r'\s)')
@@ -52,7 +57,7 @@ def synonym(inData):
     filename = Path(sys.argv[1]).stem
     with open(filename + '_freq.csv') as fd:
         freqDict = dict(csv.reader(fd, delimiter=','))
-    with open('synonyms.csv') as f:
+    with open(getdatafilepath('synonyms.csv')) as f:
         f.readline()  # ignore first line (header)
         syndict = dict(csv.reader(f, delimiter=','))
         for word in wordList:
