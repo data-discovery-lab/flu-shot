@@ -1,22 +1,55 @@
-### To setup a virtual environment
-> $ pip install virtualenv
+# negconvert
+## Run Stanford NLP Server
 
-> $ virtualenv --python=/path/to/python venvpy36
+Download Stanford CoreNLP at https://stanfordnlp.github.io/CoreNLP/index.html
 
-### To activate the virtual environment
->  $ source venvpy36/bin/activate (for Linux)
+The downloaded file at the moment is __*stanford-corenlp-full-2017-06-09.zip*__
 
-> $ venvpy36\Scripts\activate (for Windows)
+Extract the zip file and navigate to the extracted location in Cmd (Windows) or Terminal (Mac and Unix).
 
-### To install the package
-> $ pip install negconvert
+Run this command to start the server:
+```
+$ java -mx4g -cp "*" edu.stanford.nlp.pipeline.StanfordCoreNLPServer -port 9000 -timeout 15000
+```
+Verify if the server runs properly by browsing http://localhost:9000
 
-### To run the package
-> $ negconvert unalteredTweets.csv
+For more information: https://stanfordnlp.github.io/CoreNLP/corenlp-server.html
 
-### To deactivate the virtual environment
-> $ venvpy36\Scripts\deactivate.bat (for Windows)
+## Install and use negconvert package on client
 
+### Setup virtual environment (Optional)
+Install virtualenv if not installed yet.
+```
+$ pip install virtualenv
+```
+Create a new environment named __venvpy36__
+```
+$ virtualenv --python=/path/to/python venvpy36
+```
+Activate venvpy36
+```
+# In Mac and Linux
+$ source venvpy36/bin/activate
+```
+```
+# In Windows
+$ venvpy36\Scripts\activate
+```
+### Install and run the package
+```
+$ pip install negconvert
+$ negconvert unalteredTweets.csv
+```
+### Deactivate the virtual environment
+```
+# In Mac and Linux
+$ deactivate
+```
+```
+# In Windows
+$ venvpy36\Scripts\deactivate.bat
+```
+## Requirements and other information
 ### Input file
 The input file has the following requirements:
 - Is a comma delimited csv file
