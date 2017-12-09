@@ -10,7 +10,7 @@ from pathlib import Path
 
 from stanfordcorenlp import StanfordCoreNLP
 
-nlp = StanfordCoreNLP('http://corenlp.run', port=80)
+nlp = StanfordCoreNLP('http://localhost', port=9000)
 
 _ROOT = os.path.abspath(os.path.dirname(__file__))
 

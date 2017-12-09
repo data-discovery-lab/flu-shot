@@ -12,7 +12,7 @@ setup(
     entry_points = {
         "console_scripts": ['negconvert = negconvert.negconvert:main']
         },
-    version='1.0.1',
+    version='1.0.2',
     description = 'A command line application to normalize text from people tweets for further data processing and visualization.',
     author='dylan salopek,quan nguyen',
     author_email='dylan.salopek@ttu.edu,quan.nguyen@ttu.edu',
